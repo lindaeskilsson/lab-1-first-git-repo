@@ -1,0 +1,68 @@
+# Del 2 - Första repo
+cd ~/Documents
+mkdir lab-1-first-repo
+cd lab-1-first-repo
+git init
+
+cat > README.md << 'EOF2'
+duck
+moose
+cat
+EOF2
+
+git add README.md
+git commit -m "initial commit"
+
+git switch -c feature1
+echo "dog" >> README.md
+sed -i '' 's/^moose$/mouse/' README.md
+git add README.md
+git commit -m "update animals: moose->mouse, add dog"
+
+git switch main
+sed -i '' 's/^moose$/mammoth/' README.md
+git add README.md
+git commit -m "Change moose to mammoth"
+
+git merge feature1
+
+# (merge conflict löses och commit görs)
+
+git tag extinct
+git reset --hard HEAD~1
+
+git branch feature2
+
+# Capitalize animals
+awk '{print toupper(substr($0,1,1)) substr($0,2)}' README.md > /tmp/README.md && mv /tmp/README.md README.md
+git add README.md
+git commit -m "Capitalize animal names"
+
+git switch feature2
+touch fix1.txt
+git add fix1.txt
+git commit -m "Add fix1.txt"
+touch fix2.txt
+git add fix2.txt
+git commit -m "Add fix2.txt"
+
+git switch main
+git log feature2 --oneline -- fix2.txt
+git cherry-pick 3ffa5c5
+
+git switch -c cleanup_test
+echo "bird" >> README.md
+git add README.md
+git commit -m "Add bird"
+echo "fish" >> README.md
+git add README.md
+git commit -m "Add fish"
+echo "snake" >> README.md
+git add README.md
+git commit -m "Add snake"
+git rebase -i HEAD~3
+
+echo "turtle" >> README.md
+git add README.md
+git commit -m "Addid turtle"
+git commit --amend -m "Added turtle"
